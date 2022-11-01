@@ -22,6 +22,9 @@
                 connection.start().then(() => {
                     statusShow();
                     $("#loading").hide();
+
+                    connection.invoke("GetNames");
+
                 }).catch((err) => {
                     console.log(err);
                     setTimeout(() => start(), 2000);
@@ -74,6 +77,16 @@
 
             connection.on("Error", (errorText) => {
                 alert(errorText);
+            });
+
+            connection.on("ReceiveNames", (names) => {
+                console.log(names);
+                connection("#namesList").empty();
+
+                // doesn't work?
+                names.forEach((item, index) => {
+                    $("#namesList").append(`<li class="list-group-item"> ${item}</li>`)
+                });
             });
         });
 
