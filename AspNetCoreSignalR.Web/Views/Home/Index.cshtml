@@ -67,6 +67,10 @@
             connection.on("ReceiveName", (name) => {
                 $("#namesList").append(`<li class="list-group-item"> ${name}</li>`)
             });
+
+            connection.on("Notify", (countText) => {
+                $("#notify").html(`<div class="alert alert-success">${countText}</div>`)
+            });
         });
 
 
@@ -90,6 +94,7 @@
                 </div>
                 <div class="clearfix"></div>
             </div>
+            <div id="notify"></div>
         </div>
         <div class="col-md-8 offset-2">
             <ul class="list-group" id="namesList"></ul>
