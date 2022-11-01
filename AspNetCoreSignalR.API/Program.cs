@@ -1,8 +1,11 @@
+using AspNetCoreSignalR.API.Hubs;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddSignalRCore();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -21,5 +24,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// http://localhost:4400/MyHub (connecting to myhub)
+app.MapHub<MyHub>("/MyHub");
 
 app.Run();
