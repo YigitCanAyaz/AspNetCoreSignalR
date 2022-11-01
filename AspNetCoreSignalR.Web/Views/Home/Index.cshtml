@@ -28,7 +28,7 @@
 
             // subscribe (return sendName operation)
             connection.on("ReceiveName", (name) => {
-                console.log(name);
+                $("#namesList").append(`<li class="list-group-item"> ${name}</li>`)
             });
         });
 
@@ -44,5 +44,8 @@
             <div class="alert alert-info">
                 Connection Status: <strong id="conStatus"></strong>
             </div>
+        </div>
+        <div class="col-md-8 offset-2">
+            <ul class="list-group" id="namesList"></ul>
         </div>
     </div>
