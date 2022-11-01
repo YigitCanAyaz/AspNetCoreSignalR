@@ -6,7 +6,9 @@ namespace AspNetCoreSignalR.API.Hubs
     // That's why we use static List
     public class MyHub : Hub
     {
-        public static List<string> Names { get; set; } = new List<string>();
+        private static List<string> Names { get; set; } = new List<string>();
+
+        private static int ClientCount { get; set; } = 0;
 
         public async Task SendName(string name)
         {
@@ -18,6 +20,22 @@ namespace AspNetCoreSignalR.API.Hubs
         public async Task GetNames()
         {
             await Clients.All.SendAsync("ReceiveNames", Names);
+        }
+
+        public async override Task OnConnectedAsync()
+        {
+            ClientCount++;
+            await Clients.All.SendAsync("ReceiveClientCount", ClientCount);
+
+            await base.OnConnectedAsync();
+        }
+
+        public async override Task OnDisconnectedAsync(Exception? exception)
+        {
+            ClientCount--;
+            await Clients.All.SendAsync("ReceiveClientCount", ClientCount);
+
+            await base.OnDisconnectedAsync(exception);
         }
     }
 }
