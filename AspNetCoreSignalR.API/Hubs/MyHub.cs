@@ -10,11 +10,21 @@ namespace AspNetCoreSignalR.API.Hubs
 
         private static int ClientCount { get; set; } = 0;
 
+        public static int TeamCount { get; set; } = 7;
+
         public async Task SendName(string name)
         {
-            Names.Add(name);
-            // method name (if client is subscribed to this method), message (can be multiple),
-            await Clients.All.SendAsync("ReceiveName", name);
+            if (Names.Count > TeamCount)
+            {
+                await Clients.Caller.SendAsync("Error", $"Team is full!, it can be maximum {TeamCount} people.");
+            }
+
+            else
+            {
+                Names.Add(name);
+                // method name (if client is subscribed to this method), message (can be multiple),
+                await Clients.All.SendAsync("ReceiveName", name);
+            }
         }
 
         public async Task GetNames()
