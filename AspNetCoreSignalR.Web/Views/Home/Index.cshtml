@@ -10,34 +10,41 @@
         $(document).ready(() => {
             var connection = new signalR.HubConnectionBuilder().configureLogging(signalR.LogLevel.Critical).withAutomaticReconnect([1000, 3000, 3000, 2000]).withUrl("https://localhost:7153/MyHub").build();
 
-            console.log(connection);
+            statusShow();
+            start();
 
-            $("#conStatus").text(connection.state);
-
-            connection.start().then(() => {
+            // Functions
+            function statusShow() {
                 $("#conStatus").text(connection.state);
-                $("#loading").hide();
+            }
 
+            function start() {
+                connection.start().then(() => {
+                    statusShow();
+                    $("#loading").hide();
+                }).catch((err) => {
+                    console.log(err);
+                    setTimeout(() => start(), 2000);
+                });
+            }
 
-            }).catch((err) => { console.log(err) });
-
-            $("#conStatus").text(connection.state);
+            statusShow();
 
             connection.onreconnecting(err => {
                 $("#loading").show();
-                $("#conStatus").text(connection.state);
-                console.log("onrecconection: " + err);
+                statusShow();
             });
 
             connection.onreconnected(connectionId => {
                 $("#loading").hide();
-                $("#conStatus").text(connection.state);
+                statusShow();
                 console.log("connectionId: " + connectionId);
             });
 
             connection.onclose(() => {
                 $("#loading").hide();
-                $("#conStatus").text(connection.state);
+                statusShow();
+                start();
             });
 
             // Clicks
