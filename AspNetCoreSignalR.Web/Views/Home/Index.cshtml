@@ -23,7 +23,9 @@
                     statusShow();
                     $("#loading").hide();
 
-                    connection.invoke("GetNames");
+                    // connection.invoke("GetNames");
+
+                    connection.invoke("GetNamesByGroup");
 
                 }).catch((err) => {
                     console.log(err);
@@ -64,7 +66,32 @@
 
             });
 
-            // on methods
+            $("#btnNameTeam").click(() => {
+                let name = $("#txtName").val();
+                let teamName = $("input[type=radio]:checked").val();
+
+                connection.invoke("SendNameByGroup", name, teamName).catch((err) => {
+                    console.log(err);
+                });
+            });
+
+            $("input[type=radio]").change(() => {
+                let value = $(`input[type=radio]:checked`).val();
+
+                console.log(value);
+
+                if (value === "Team A") {
+                    connection.invoke("AddToGroup", value);
+
+                    connection.invoke("RemoveToGroup", "Team B");
+                } else {
+                    connection.invoke("AddToGroup", value);
+
+                    connection.invoke("RemoveToGroup", "Team A");
+                }
+            });
+
+            // on methods.
 
             // subscribe (return sendName operation)
             connection.on("ReceiveName", (name) => {
@@ -88,6 +115,27 @@
                     $("#namesList").append(`<li class="list-group-item"> ${item}</li>`)
                 });
             });
+
+            connection.on("ReceiveMessageByGroup", (name, teamId) => {
+
+                let listName = "";
+
+                if (teamId === 1) {
+                    $("#ATeamList").append
+
+                    listName = "ATeamList"
+                }
+
+                else {
+                    listName = "BTeamList";
+                }
+
+                $(`#${listName}`).append(`<li class="list-group-item">${name}</li>`)
+            });
+
+            connection.on("ReceiveNamesByGroup", (teams) => {
+
+            });
         });
 
 
@@ -99,7 +147,8 @@
             <input class="form-control" type="text" id="txtName" />
             <hr />
             <button class="btn btn-primary" id="btnNameSave">Save Name</button>
-            <div class="alert alert-info">
+            <button class="btn btn-warning" id="btnNameTeam">Save Name(Team)</button>
+            <div class="alert alert-info mt-2">
                 <div class="float-left">
                     Connection Status: <strong id="conStatus"></strong>
                     Clients Available: <string id="clientCount"></string>
@@ -113,7 +162,29 @@
             </div>
             <div id="notify"></div>
         </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-8 offset-md-2">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="TeamGroup" value="Team A" />
+                <label class="form-check-label">A Team</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="TeamGroup" value="Team B" />
+                <label class="form-check-label">B Team</label>
+            </div>
+        </div>
+
         <div class="col-md-8 offset-2">
-            <ul class="list-group" id="namesList"></ul>
+            <div class="row">
+                <div class="col-md-6">
+                    <ul class="list-group" id="ATeamList"></ul>
+                </div>
+                <div class="col-md-6">
+                    <ul class="list-group" id="BTeamList"></ul>
+                </div>
+            </div>
         </div>
     </div>

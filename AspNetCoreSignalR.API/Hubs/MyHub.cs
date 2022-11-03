@@ -43,7 +43,7 @@ namespace AspNetCoreSignalR.API.Hubs
 
         // Groups Add - Remove
 
-        public async Task AddToGrup(string teamName)
+        public async Task AddToGroup(string teamName)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, teamName);
         }
@@ -74,7 +74,7 @@ namespace AspNetCoreSignalR.API.Hubs
 
             await _context.SaveChangesAsync();
 
-            await Clients.Group(teamName).SendAsync("ReceiveMessageByGroup", name, teamName);
+            await Clients.Group(teamName).SendAsync("ReceiveMessageByGroup", name, team.Id);
         }
 
         // SignalR converts object to json automatically
