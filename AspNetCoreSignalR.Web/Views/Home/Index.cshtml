@@ -81,6 +81,12 @@
                 });
             });
 
+            $("#btnProduct").click(() => {
+                let product = { "Id": 1, "Name": "Pencil", "Price": 100, "Stock": 200 };
+
+                connection.invoke("SendProduct", product);
+            });
+
             $("input[type=radio]").change(() => {
                 let value = $(`input[type=radio]:checked`).val();
 
@@ -159,6 +165,10 @@
                     });
                 });
             });
+
+            connection.on("ReceiveProduct", (product) => {
+                console.log(product);
+            });
         });
 
 
@@ -171,6 +181,8 @@
             <hr />
             <button class="btn btn-primary" id="btnNameSave">Save Name</button>
             <button class="btn btn-warning" id="btnNameTeam">Save Name(Team)</button>
+
+            <button class="btn btn-danger" id="btnProduct">Send Product</button>
             <div class="alert alert-info mt-2">
                 <div class="float-left">
                     Connection Status: <strong id="conStatus"></strong>
