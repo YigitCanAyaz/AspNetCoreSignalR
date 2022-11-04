@@ -67,8 +67,14 @@
             });
 
             $("#btnNameTeam").click(() => {
+
                 let name = $("#txtName").val();
                 let teamName = $("input[type=radio]:checked").val();
+
+                if (teamName === null) {
+                    alert("Select a team");
+                    return;
+                }
 
                 connection.invoke("SendNameByGroup", name, teamName).catch((err) => {
                     console.log(err);
@@ -130,11 +136,28 @@
                     listName = "BTeamList";
                 }
 
-                $(`#${listName}`).append(`<li class="list-group-item">${name}</li>`)
+                $(`#${listName}`).append(`<li class="list-group-item">${name}</li>`);
             });
 
             connection.on("ReceiveNamesByGroup", (teams) => {
 
+                console.log(teams);
+
+                teams.forEach((team, index) => {
+                    if (team.teamId === 1) {
+                        $("#ATeamList").append
+
+                        listName = "ATeamList"
+                    }
+
+                    else {
+                        listName = "BTeamList";
+                    }
+
+                    team.users.foreach((user, index2) => {
+                        $(`#${listName}`).append(`<li class="list-group-item">${user.name}</li>`)
+                    });
+                });
             });
         });
 
@@ -180,9 +203,11 @@
         <div class="col-md-8 offset-2">
             <div class="row">
                 <div class="col-md-6">
+                    <h2>Team A</h2>
                     <ul class="list-group" id="ATeamList"></ul>
                 </div>
                 <div class="col-md-6">
+                    <h2>Team B</h2>
                     <ul class="list-group" id="BTeamList"></ul>
                 </div>
             </div>

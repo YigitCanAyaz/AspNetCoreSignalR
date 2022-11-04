@@ -82,9 +82,9 @@ namespace AspNetCoreSignalR.API.Hubs
         {
             var teams = _context.Teams.Include(x => x.Users).Select(x => new
             {
-                teamName = x.Name,
+                teamId = x.Id,
                 Users = x.Users.ToList()
-            });
+            }).ToList();
 
             await Clients.All.SendAsync("ReceiveNamesByGroup", teams);
         }
